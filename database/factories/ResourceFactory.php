@@ -21,14 +21,14 @@ class ResourceFactory extends Factory
     public function definition()
     {
         return [
-            'type_id' => Type::factory(),
-            'category_id' => Category::factory(),
-            'title' => $this->faker->sentence(),
-            'author' => $this->faker->name(),
-            'recording' => $this->faker->url(),
-            'presentation' => $this->faker->url(),
-            'repository' => $this->faker->url(),
-            'extra_resource_id1' => ExtraResource::factory(),
+            'type_id' => Type::all()->random()->id,
+            'category_id' => Category::all()->random()->id,
+            'title' => fake()->sentence(),
+            'author' => fake()->name(),
+            'recording' => fake()->url(),
+            'presentation' => fake()->url(),
+            'repository' => fake()->url(),
+            'extra_resource_id1' => ExtraResource::all()->random()->id
         ];
     }
 }
