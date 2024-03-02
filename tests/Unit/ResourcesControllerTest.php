@@ -62,7 +62,7 @@ class ResourcesControllerTest extends TestCase
         'recording' => $this->faker->url,
         'presentation' => $this->faker->url,
         'repository' => $this->faker->url,
-        // Agrega otros campos según tus necesidades
+       
     ];
 
     // Realiza la solicitud al método store
@@ -81,7 +81,7 @@ class ResourcesControllerTest extends TestCase
         'recording' => $data['recording'],
         'presentation' => $data['presentation'],
         'repository' => $data['repository'],
-        // Agrega otros campos según tus necesidades
+       
     ]);
 
 }
@@ -95,7 +95,7 @@ class ResourcesControllerTest extends TestCase
 
 
     $resource = Resource::factory()->create();
-   // dd($resource);  // Agrega esta línea para imprimir el recurso y verifica si se crea correctamente.
+
     $response = $this->get(route('resource.show', $resource->id));
 
 
@@ -108,7 +108,6 @@ class ResourcesControllerTest extends TestCase
     // Verifica si el recurso correcto se está pasando a la vista
     $response->assertViewHas('resource', $resource);
 
-    // Puedes agregar más aserciones según sea necesario
 }
 
 public function test_show_displays_an_error_for_nonexistent_resource()
@@ -125,8 +124,46 @@ public function test_show_displays_an_error_for_nonexistent_resource()
     $response = $this->get(route('resource.show', $nonexistentResourceId));
 
     // Verifica si la solicitud retorna un código 404 (recurso no encontrado)
-    $response->assertStatus(500);
+    $response->assertStatus(404);
 
+}
+
+public function test_edit_returns_view_with_expected_data()
+{
+    // Ejecuta la migración y los seeders  
+    $this->artisan('migrate --seed');
+
+    $type = Type::first(); 
+    $category = Category::first();  
+    $extraResource = ExtraResource::first(); 
+
+    $resource = Resource::factory()->create();
+
+    $response = $this->get(route('resource.edit', $resource->id));
+
+    $response->assertStatus(200)
+             ->assertViewIs('resourceEdit')
+             ->assertViewHas('types', Type::all())
+             ->assertViewHas('categories', Category::all())
+             ->assertViewHas('extraResources', ExtraResource::all())
+             ->assertViewHas('resource', $resource);
+}
+
+public function test_destroy_deletes_an_existing_resource()
+{
+    // Ejecuta la migración y los seeders
+    $this->artisan('migrate --seed');
+
+    // Crea un recurso para la eliminación
+    $resource = Resource::factory()->create();
+
+    // Realiza una solicitud para eliminar el recurso
+    $response = $this->delete(route('resource.destroy', $resource->id));
+
+    $response->assertRedirect(route('resource.index'))->assertStatus(302);
+
+    // Verifica que el recurso haya sido eliminado de la base de datos
+    $this->assertDatabaseMissing('resources', ['id' => $resource->id]);
 }
 
 }

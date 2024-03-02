@@ -55,12 +55,16 @@ class ResourceController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($resource):View
-    {
-        $resource = Resource::find($resource);
-        return view('resourceShow', compact('resource'));
+    public function show($resource)
+{
+    $resource = Resource::find($resource);
+
+    if (!$resource) {
+        abort(404, 'Resource not found');
     }
 
+    return view('resourceShow', compact('resource'));
+}
     /**
      * Show the form for editing the specified resource.
      */

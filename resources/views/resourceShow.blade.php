@@ -3,6 +3,7 @@
 @section('title', 'Resource Details')
 
 @section('content')
+   @if ($resource)
     <div class="max-w-2xl mx-auto mt-8 p-6 bg-white rounded-lg shadow-xl">
         <div class="flex justify-between items-center mt-2 mb-4">
             <p class="text-gray-500">#{{ $resource->id }}</p>
@@ -44,4 +45,7 @@
             <a href="{{ route('resource.index') }}" class="text-white bg-gray-400 hover:bg-gray-600 px-4 py-2 rounded-full focus:outline-none focus:ring focus:border-gray-300 transition duration-300 ease-in-out"> <i class="fa fa-arrow-left" aria-hidden="true"></i> Back to List</a>
         </div>
     </div>
+    @else
+    <p>Recurso no encontrado.</p>
+    @endif
  @endsection
