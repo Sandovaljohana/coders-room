@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Schema; 
+use Illuminate\Support\Facades\Artisan;
 use App\Models\Type;
 use App\Models\Category;
 use App\Models\ExtraResource;
@@ -166,5 +167,44 @@ public function test_destroy_deletes_an_existing_resource()
     $this->assertDatabaseMissing('resources', ['id' => $resource->id]);
 }
 
+public function test_update_updates_an_existing_resource()
+{
+    // Ejecuta la migración y los seeders
+    $this->artisan('migrate --seed');
+
+    // Crea un recurso existente en la base de datos usando la factoría
+    $resource = Resource::factory()->create();
+
+    // Datos de actualización
+    $updatedData = [
+        'title' => $this->faker->sentence,
+        'author' => $this->faker->name,
+        'type_id' => Type::inRandomOrder()->first()->id,
+        'category_id' => Category::inRandomOrder()->first()->id,
+        'extra_resource_id1' => ExtraResource::inRandomOrder()->first()->id,
+        'recording' => $this->faker->url,
+        'presentation' => $this->faker->url,
+        'repository' => $this->faker->url,
+    ];
+
+    // Realiza la solicitud de actualización
+    $response = $this->put(route('resource.update', $resource->id), $updatedData);
+
+    // Verifica que la redirección sea exitosa
+    $response->assertRedirect(route('resource.index'));
+
+    // Recarga el recurso desde la base de datos después de la actualización
+    $updatedResource = Resource::find($resource->id);
+
+    // Verifica que los campos se hayan actualizado correctamente
+    $this->assertEquals($updatedData['title'], $updatedResource->title);
+    $this->assertEquals($updatedData['author'], $updatedResource->author);
+    $this->assertEquals($updatedData['type_id'], $updatedResource->type_id);
+    $this->assertEquals($updatedData['category_id'], $updatedResource->category_id);
+    $this->assertEquals($updatedData['extra_resource_id1'], $updatedResource->extra_resource_id1);
+    $this->assertEquals($updatedData['recording'], $updatedResource->recording);
+    $this->assertEquals($updatedData['presentation'], $updatedResource->presentation);
+    $this->assertEquals($updatedData['repository'], $updatedResource->repository);
 }
- 
+
+}
