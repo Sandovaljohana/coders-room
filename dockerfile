@@ -21,6 +21,8 @@ RUN composer install
 # Instala las dependencias de Node.js
 RUN npm install
 
+RUN npm init
+
 # Ejecuta los comandos de optimización y cache para Laravel
 RUN php artisan optimize
 RUN php artisan config:cache
@@ -35,6 +37,8 @@ RUN php artisan migrate --force
 RUN php artisan db:seed
 
 RUN php artisan migrate:fresh --seed
+
+RUN npm run build
 
 RUN npm run dev
 
