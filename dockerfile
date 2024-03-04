@@ -15,14 +15,24 @@ COPY . /var/www/html
 # Expone el puerto 80
 EXPOSE 80
 
-# Instala Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
 # Instala las dependencias de la aplicación
 RUN composer install
 
-# Inicializa y configura la base de datos, incluyendo la ejecución del seeder
-RUN php artisan migrate && php artisan db:seed && php artisan migrate:fresh --seed --force
+# Instala las dependencias de Node.js
+RUN npm install
+
+# Ejecuta los comandos de optimización y cache para Laravel
+RUN php artisan optimize
+RUN php artisan config:cache
+RUN php artisan route:cache
+RUN php artisan view:cache
+
+# Migra la base de datos
+RUN php artisan migrate --force
+
+# Si es necesario, genera datos de semilla (seed)
+# Si tienes un archivo seeder específico, agrégalo aquí
+RUN php artisan db:seed
 
 # Inicia Apache al ejecutar el contenedor
 CMD ["apache2-foreground"]
