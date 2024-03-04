@@ -4,6 +4,12 @@ FROM php:8.2-apache
 # Instala las dependencias necesarias
 RUN docker-php-ext-install pdo_mysql mysqli
 
+# Instala el paquete necesario para ejecutar el comando curl
+RUN apt-get update && apt-get install -y curl
+
+# Descarga e instala Nixpacks
+RUN curl -sSL https://nixpacks.com/install.sh | bash
+
 # Configura el entorno de Apache
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
