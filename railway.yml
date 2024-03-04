@@ -1,10 +1,10 @@
 deploy:
   steps:
     - name: Install dependencies
-      command: yarn install
+      command: composer install && yarn install
 
     - name: Build project
-      command: yarn build
+      command: yarn product && php artisan optimize && php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan migrate:fresh --seed --force
 
     - name: Run tests
       command: php artisan test
