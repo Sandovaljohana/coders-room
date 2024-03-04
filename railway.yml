@@ -1,0 +1,13 @@
+deploy:
+  steps:
+    - name: Install dependencies
+      command: yarn install
+
+    - name: Build project
+      command: yarn build
+
+    - name: Run tests
+      command: php artisan test
+
+    - name: Deploy to production
+      command: railway deploy
