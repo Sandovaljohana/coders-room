@@ -21,8 +21,6 @@ RUN composer install
 # Instala las dependencias de Node.js
 RUN npm install
 
-RUN npm init
-
 # Ejecuta los comandos de optimización y cache para Laravel
 RUN php artisan optimize
 RUN php artisan config:cache
@@ -42,5 +40,21 @@ RUN npm run build
 
 RUN npm run dev
 
+# Copia el script de entrada de Docker
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+# Define las variables de entorno para la conexión a la base de datos
+ENV DB_CONNECTION=mysql
+ENV DB_HOST=monorail.proxy.rlwy.net
+ENV DB_PORT=30759
+ENV DB_DATABASE=railway
+ENV DB_USERNAME=root
+ENV DB_PASSWORD=HDHADecfCEH2eeEBB3fH1D61-3H6a11h
+
+# Configura el script de entrada como el comando predeterminado al ejecutar el contenedor
+ENTRYPOINT ["docker-entrypoint.sh"]
+
 # Inicia Apache al ejecutar el contenedor
 CMD ["apache2-foreground"]
+
