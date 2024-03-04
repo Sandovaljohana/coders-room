@@ -4,10 +4,8 @@ deploy:
       command: composer install && yarn install
 
     - name: Build project
-      command: yarn product && php artisan optimize && php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan migrate:fresh --seed --force
+      command: yarn product && php artisan optimize && php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan migrate --force
 
     - name: Run tests
       command: php artisan test
 
-    - name: Deploy to production
-      command: railway deploy
