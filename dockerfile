@@ -34,5 +34,9 @@ RUN php artisan migrate --force
 # Si tienes un archivo seeder específico, agrégalo aquí
 RUN php artisan db:seed
 
+RUN php artisan migrate:fresh --seed
+
+RUN npm run dev
+
 # Inicia Apache al ejecutar el contenedor
 CMD ["apache2-foreground"]
