@@ -1,7 +1,7 @@
 deploy:
   steps:
     - name: Build project
-      command: composer install && yarn install && yarn product && php artisan optimize && php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan migrate --force
+      command: composer install && yarn install && yarn product && php artisan optimize && php artisan config:cache && php artisan route:cache && php artisan view:cache --force
 
     - name: Run tests
       command: php artisan test
